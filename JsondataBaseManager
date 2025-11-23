@@ -1,5 +1,3 @@
-package skill.forge;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,24 +38,28 @@ public class JsonDataBaseManager {
         }
     }
     
-    public void saveUsers(JSONArray users) {
+    public boolean saveUsers(JSONArray users) {
         try {
             Files.write( // overwrites the file with the new content givven to it
                     Paths.get(this.usersPath), // converts a file path ( string ) into a path object
                     users.toString(4).getBytes()); // converts it into a formatted text , with 4 spaces indentation
+            return true;
         }
         catch (IOException e) {
             System.out.println("Error saving users.json: " + e.getMessage());
+           return false;
         }
     }
-    public void saveCourses(JSONArray courses) {
+    public boolean saveCourses(JSONArray courses) {
         try {
             Files.write( // overwrites the file with the new content given to it
                     Paths.get(this.coursesPath), // converts a file path ( string ) into a path object
                     courses.toString(4).getBytes()); // converts it into a formatted text , with 4 spaces indentation
+            return true;
         }
         catch (IOException e) {
             System.out.println("Error saving courses.json: " + e.getMessage());
+            return false;
         }
     }
     
@@ -170,6 +172,54 @@ public class JsonDataBaseManager {
             }
         }
         return lesson;
+    }
+    
+    public Quiz parseQuiz(JSONObject json) {
+        try {
+            String quizId = json.getString("quizId");
+            String lessonId = json.getString("lessonId");
+            int passingScore = json.getInt("passingScore");
+            int maxAttempts = json.getInt("maxAttempts");
+
+            Quiz quiz = new Quiz(quizId, lessonId, passingScore, maxAttempts);
+            quiz.setTitle(json.optString("title", "Quiz"));
+
+            JSONArray questionsArray = json.optJSONArray("questions");
+            if (questionsArray != null) {
+                for (int i = 0; i < questionsArray.length(); i++) {
+                    Question question = parseQuestion(questionsArray.getJSONObject(i));
+                    quiz.addQuestion(question);
+                }
+            }
+
+            return quiz;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public Question parseQuestion(JSONObject json) {
+        try {
+            String questionId = json.getString("questionId");
+            String questionText = json.getString("questionText");
+            int correctAnswerIndex = json.getInt("correctAnswerIndex");
+
+            JSONArray optionsArray = json.getJSONArray("options");
+            List<String> options = new ArrayList<>();
+            for (int i = 0; i < optionsArray.length(); i++) {
+                options.add(optionsArray.getString(i));
+            }
+
+            return new Question(questionId, questionText, options, correctAnswerIndex);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public QuizAttempt parseQuizAttempt(JSONObject json) {
+        return QuizAttempt.fromJSONObject(json);
     }
     
     public JSONObject toJson(User user) {
@@ -449,60 +499,50 @@ public class JsonDataBaseManager {
         if (courseJson == null) return null;
         return parseCourse(courseJson);
     }
-
+    
+    // Get all pending courses
+    public List<Course> getPendingCourses() {
+        List<Course> pendingCourses = new ArrayList<>();
+        JSONArray coursesArray = loadCourses();
+        
+        for (int i = 0; i < coursesArray.length(); i++) {
+            JSONObject courseJson = coursesArray.getJSONObject(i);
+            Course course = parseCourse(courseJson);
+            if ("PENDING".equals(course.getApprovalStatus())) {
+                pendingCourses.add(course);
+            }
+        }
+        return pendingCourses;
+    }
+    
+    // Update course approval status
+    public boolean updateCourseStatus(String courseId, String newStatus) {
+        JSONArray coursesArray = loadCourses();
+        
+        for (int i = 0; i < coursesArray.length(); i++) {
+            JSONObject courseJson = coursesArray.getJSONObject(i);
+            if (courseId.equals(courseJson.optString("courseId"))) {
+                courseJson.put("approvalStatus", newStatus);
+                coursesArray.put(i, courseJson);
+                return saveCourses(coursesArray);
+            }
+        }
+        return false;
+    }
+    
+    // Get admin by ID
+    public JSONObject getAdminById(String adminId) {
+        JSONArray users = loadUsers();
+        for (int i = 0; i < users.length(); i++) {
+            JSONObject user = users.getJSONObject(i);
+            if ("admin".equals(user.optString("role")) && adminId.equals(user.optString("userId"))) {
+                return user;
+            }
+        }
+        return null;
+    }
 
     public String generateId() {
         return UUID.randomUUID().toString();
     }
-
-//methods for question and quiz
-
-public Quiz parseQuiz(JSONObject json) {
-        try {
-            String quizId = json.getString("quizId");
-            String lessonId = json.getString("lessonId");
-            int passingScore = json.getInt("passingScore");
-            int maxAttempts = json.getInt("maxAttempts");
-
-            Quiz quiz = new Quiz(quizId, lessonId, passingScore, maxAttempts);
-            quiz.setTitle(json.optString("title", "Quiz"));
-
-            JSONArray questionsArray = json.optJSONArray("questions");
-            if (questionsArray != null) {
-                for (int i = 0; i < questionsArray.length(); i++) {
-                    Question question = parseQuestion(questionsArray.getJSONObject(i));
-                    quiz.addQuestion(question);
-                }
-            }
-
-            return quiz;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Question parseQuestion(JSONObject json) {
-        try {
-            String questionId = json.getString("questionId");
-            String questionText = json.getString("questionText");
-            int correctAnswerIndex = json.getInt("correctAnswerIndex");
-
-            JSONArray optionsArray = json.getJSONArray("options");
-            List<String> options = new ArrayList<>();
-            for (int i = 0; i < optionsArray.length(); i++) {
-                options.add(optionsArray.getString(i));
-            }
-
-            return new Question(questionId, questionText, options, correctAnswerIndex);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public QuizAttempt parseQuizAttempt(JSONObject json) {
-        return QuizAttempt.fromJSONObject(json);
-    }
-
 }
