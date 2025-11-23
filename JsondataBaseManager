@@ -164,6 +164,10 @@ public class JsonDataBaseManager {
         return user.toJSONObject();
     }
 
+    public JSONObject toJson(Admin admin) {
+        return admin.toJSONObject(); // Just call the object's own method
+    }
+
     public JSONObject toJson(Student student) {
         return student.toJSONObject(); // Just call the object's own method
     }
