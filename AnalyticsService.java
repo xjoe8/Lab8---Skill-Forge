@@ -1,4 +1,4 @@
-package lab8;
+package lab7;
 
 import java.util.*;
 import org.json.JSONArray;
