@@ -3,7 +3,6 @@ package lab8;
 import java.util.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import lab7.*;
 
 public class AnalyticsService {
     private JsonDataBaseManager db;
