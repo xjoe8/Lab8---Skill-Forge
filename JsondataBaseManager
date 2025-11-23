@@ -63,14 +63,26 @@ public class JsonDataBaseManager {
     
     public User parseUser(JSONObject J) {
         String role = J.getString("role");
-
-        if (role.equals("student")) {
+        if (role.equals("admin")) {
+            return parseAdmin(J);
+        }
+        else if (role.equals("student")) {
             return parseStudent(J);
         } 
         else if (role.equals("instructor")) {
             return parseInstructor(J);
         }
         return null;
+    }
+
+    public Admin parseAdmin(JSONObject J) {
+        Admin a = new Admin(
+            J.getString("userId"),
+            J.getString("username"),
+            J.getString("email"),
+            J.getString("passwordHash"));
+        
+        return a;
     }
         
     public Student parseStudent(JSONObject J) {
