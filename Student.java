@@ -1,4 +1,4 @@
-package lab.pkg78;
+package lab7;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -72,6 +72,15 @@ public class Student extends User {
             progressJson.put(entry.getKey(), lessonsArray);
         }
         json.put("progress", progressJson);
+
+        //ADD QUIZ SCORES TO JSON
+        JSONObject quizScoresJson = new JSONObject();
+        if (quizScores != null) {
+            for (Map.Entry<String, Double> entry : quizScores.entrySet()) {
+                quizScoresJson.put(entry.getKey(), entry.getValue());
+            }
+        }
+        json.put("quizScores", quizScoresJson);
 
         return json;
     }
