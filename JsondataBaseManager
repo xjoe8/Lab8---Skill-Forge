@@ -553,6 +553,20 @@ public class JsonDataBaseManager {
         return null;
     }
 
+    public List<Course> getApprovedCourses() {
+        List<Course> approvedCourses = new ArrayList<>();
+        JSONArray coursesArray = loadCourses();
+
+        for (int i = 0; i < coursesArray.length(); i++) {
+            JSONObject courseJson = coursesArray.getJSONObject(i);
+            Course course = parseCourse(courseJson);
+            if ("APPROVED".equals(course.getApprovalStatus())) {
+                approvedCourses.add(course);
+            }
+        }
+        return approvedCourses;
+    }
+
     public String generateId() {
         return UUID.randomUUID().toString();
     }
