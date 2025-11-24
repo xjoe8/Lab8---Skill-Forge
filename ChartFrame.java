@@ -1,6 +1,8 @@
+package skill.forge;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
+import java.awt.geom.AffineTransform;
 
 public class ChartFrame extends JFrame {
     private AnalyticsService analyticsService;
