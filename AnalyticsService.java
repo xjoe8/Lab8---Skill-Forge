@@ -1,4 +1,4 @@
-package lab7;
+package skill.forge;
 
 import java.util.*;
 import org.json.JSONArray;
