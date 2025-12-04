@@ -1,6 +1,6 @@
-package lab.pkg78;
-
+package skill.forge;
 // Quiz.java (enhanced with missing methods)
+
 import java.util.*;
 import org.json.JSONObject;
 import org.json.JSONArray;

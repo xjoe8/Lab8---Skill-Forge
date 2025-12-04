@@ -1,9 +1,10 @@
-package lab.pkg78;
+package FrontEnd;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import skill.forge.*;
 
 
 public class LessonList extends javax.swing.JFrame {
@@ -19,14 +20,14 @@ public class LessonList extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */
-    public LessonList(Course course, Student student) {
+    public LessonList(Course course, Student student, JsonDataBaseManager dbManager) {
         initComponents();
-        this.courseId = course.getCourseId();
+        this.courseId = courseId;
         this.course = course;
         this.student = student;
+        this.dbManager = dbManager;
 
         jLabel1.setText(course.getTitle() + " :" + "Lessons ");
-        dbManager = new JsonDataBaseManager("users.json", "courses.json");
         courseService = new CourseService(dbManager);
         lessonService = new LessonService(dbManager);
         loadintoTable(this.course);
@@ -189,7 +190,7 @@ public class LessonList extends javax.swing.JFrame {
 
             if (selectedLesson != null) {
                 // Open the lesson viewer with the selected lesson
-                LessonViewerFrame lessonViewer = new LessonViewerFrame(student, course, selectedLesson);
+                LessonViewerFrame lessonViewer = new LessonViewerFrame(student, course, selectedLesson,dbManager);
                 lessonViewer.setVisible(true);
 
                 // Optional: Add listener to refresh when lesson viewer closes

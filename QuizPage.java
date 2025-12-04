@@ -1,4 +1,4 @@
-package lab.pkg78;
+package FrontEnd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import skill.forge.*;
 
 public class QuizPage extends javax.swing.JFrame {
 

@@ -1,9 +1,10 @@
-package lab.pkg78;
+package FrontEnd;
 
 import javax.swing.*;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import skill.forge.*;
 
 
 public class LessonViewerFrame extends javax.swing.JFrame {
@@ -17,13 +18,13 @@ public class LessonViewerFrame extends javax.swing.JFrame {
     private QuizService quizService;
     
 
-    public LessonViewerFrame(Student student, Course course, Lesson lesson ) {
+    public LessonViewerFrame(Student student, Course course, Lesson lesson, JsonDataBaseManager dbManager) {
         initComponents();
         
         this.student = student;
         this.course = course;
         this.lesson = lesson;
-        this.dbManager = new JsonDataBaseManager("users.json", "courses.json");
+        this.dbManager = dbManager;
         this.quizService = new QuizService(dbManager);
         loadLessonInfo();
     }
@@ -149,7 +150,8 @@ public class LessonViewerFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here: back button
         // Back button
-        new LessonList(course, student).setVisible(true);
+        new LessonList(course, student, dbManager).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -166,7 +168,6 @@ public class LessonViewerFrame extends javax.swing.JFrame {
         }
         // Open QuizPage
         QuizPage quizPage = new QuizPage(quiz, student, quizService, dbManager, this, lesson.getLessonId());
-
         quizPage.setVisible(true);
 
         // Optional: disable the take quiz button while quiz is open
@@ -197,14 +198,14 @@ public class LessonViewerFrame extends javax.swing.JFrame {
 
     /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(() -> new LessonViewerFrame(student, course, selectedLesson).setVisible(true));
-    Student student = new Student("434800c2-4642-484f-bb61-ed66212b56d1", "me", "me@skillforge.com", "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3");
-    Course course = new Course("C101", "Java Basics", "Introduction to Java programming.", "I100");
+   // Student student = new Student("434800c2-4642-484f-bb61-ed66212b56d1", "me", "me@skillforge.com", "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3");
+   // Course course = new Course("C101", "Java Basics", "Introduction to Java programming.", "I100");
 
     // Create a lesson or get it from the course
-    Lesson selectedLesson = new Lesson("L101", "Variables and Data Types", "nufnn");
+   // Lesson selectedLesson = new Lesson("L101", "Variables and Data Types", "nufnn");
 
     java.awt.EventQueue.invokeLater(() -> {
-        new LessonViewerFrame(student, course, selectedLesson).setVisible(true);
+        new LessonViewerFrame(student, course, selectedLesson,dbManager).setVisible(true);
     });
 }
 

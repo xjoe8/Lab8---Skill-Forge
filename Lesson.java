@@ -1,4 +1,4 @@
-package lab.pkg78;
+package skill.forge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +143,9 @@ public class Lesson {
         return lesson;
     }
     
+    public boolean hasQuiz() {
+        return this.quiz != null;
+    }
     
      public Quiz getQuiz() { 
          return quiz; 
@@ -153,4 +156,3 @@ public class Lesson {
      
     
 }
-
