@@ -1,3 +1,5 @@
+package lab7;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -111,6 +113,15 @@ public class JsonDataBaseManager {
                 }
             }
         }
+
+        JSONObject quizScoresJson = J.optJSONObject("quizScores");
+        if (quizScoresJson != null) {
+            for (String lessonId : quizScoresJson.keySet()) {
+                double score = quizScoresJson.getDouble(lessonId);
+                s.addQuizScore(lessonId, score);
+            }
+        }
+
         return s;
     }
 
@@ -540,6 +551,20 @@ public class JsonDataBaseManager {
             }
         }
         return null;
+    }
+
+    public List<Course> getApprovedCourses() {
+        List<Course> approvedCourses = new ArrayList<>();
+        JSONArray coursesArray = loadCourses();
+
+        for (int i = 0; i < coursesArray.length(); i++) {
+            JSONObject courseJson = coursesArray.getJSONObject(i);
+            Course course = parseCourse(courseJson);
+            if ("APPROVED".equals(course.getApprovalStatus())) {
+                approvedCourses.add(course);
+            }
+        }
+        return approvedCourses;
     }
 
     public String generateId() {

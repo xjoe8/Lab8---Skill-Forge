@@ -1,5 +1,4 @@
-package skill.forge;
-
+package lab7;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -9,9 +8,9 @@ import java.util.Map;
 
 public class Student extends User {
     private List<String> enrolledCourses;
-    private Map<String, List<String>> progress;
+    private Map<String, List<String>> progress;             //courseId -> completed lessonIds
     private Map<String, List<QuizAttempt>> quizAttempts;    //courseId -> quiz attempts
-    private Map<String, Double> quizScores; 
+    private Map<String, Double> quizScores;                 //lessonId -> best score
 
     public Student(String userId, String username, String email, String passwordHash) {
         super(userId, username, email, passwordHash, "student");
@@ -59,7 +58,7 @@ public class Student extends User {
         json.put("role", this.getRole());
 
         JSONArray enrolledArray = new JSONArray();
-        for (String courseId: enrolledCourses) {
+        for (String courseId : enrolledCourses) {
             enrolledArray.put(courseId);
         }
         json.put("enrolledCourses", enrolledArray);
@@ -67,17 +66,27 @@ public class Student extends User {
         JSONObject progressJson = new JSONObject();
         for (Map.Entry<String, List<String>> entry : progress.entrySet()) {
             JSONArray lessonsArray = new JSONArray();
-            for (String lessonId: entry.getValue()) {
+            for (String lessonId : entry.getValue()) {
                 lessonsArray.put(lessonId);
             }
             progressJson.put(entry.getKey(), lessonsArray);
         }
         json.put("progress", progressJson);
 
+        //ADD QUIZ SCORES TO JSON
+        JSONObject quizScoresJson = new JSONObject();
+        if (quizScores != null) {
+            for (Map.Entry<String, Double> entry : quizScores.entrySet()) {
+                quizScoresJson.put(entry.getKey(), entry.getValue());
+            }
+        }
+        json.put("quizScores", quizScoresJson);
+
         return json;
     }
     
-       //--------------------------------------------------------------------------------------------------------------------------------------
+    
+    //--------------------------------------------------------------------------------------------------------------------------------------
     //QUIZ METHODS - PROGRESS TRACKING - LAB 8:
     public void addQuizScore(String lessonId, double score) {
         //Initialize the map if it doesn't exist
@@ -97,9 +106,4 @@ public class Student extends User {
     public Map<String, Double> getQuizScores() {
         return quizScores != null ? quizScores : new HashMap<>();
     }
-
-    public String getUserID() {
-        return super.getuserId();
-    }
-
 }

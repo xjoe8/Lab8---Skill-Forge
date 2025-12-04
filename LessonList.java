@@ -190,7 +190,7 @@ public class LessonList extends javax.swing.JFrame {
 
             if (selectedLesson != null) {
                 // Open the lesson viewer with the selected lesson
-                LessonViewerFrame lessonViewer = new LessonViewerFrame(student, course, selectedLesson);
+                LessonViewerFrame lessonViewer = new LessonViewerFrame(student, course, selectedLesson,dbManager);
                 lessonViewer.setVisible(true);
 
                 // Optional: Add listener to refresh when lesson viewer closes

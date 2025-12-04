@@ -18,7 +18,7 @@ public class LessonViewerFrame extends javax.swing.JFrame {
     private QuizService quizService;
     
 
-    public LessonViewerFrame(Student student, Course course, Lesson lesson) {
+    public LessonViewerFrame(Student student, Course course, Lesson lesson, JsonDataBaseManager dbManager) {
         initComponents();
         
         this.student = student;
@@ -198,14 +198,14 @@ public class LessonViewerFrame extends javax.swing.JFrame {
 
     /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(() -> new LessonViewerFrame(student, course, selectedLesson).setVisible(true));
-    Student student = new Student("434800c2-4642-484f-bb61-ed66212b56d1", "me", "me@skillforge.com", "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3");
-    Course course = new Course("C101", "Java Basics", "Introduction to Java programming.", "I100");
+   // Student student = new Student("434800c2-4642-484f-bb61-ed66212b56d1", "me", "me@skillforge.com", "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3");
+   // Course course = new Course("C101", "Java Basics", "Introduction to Java programming.", "I100");
 
     // Create a lesson or get it from the course
-    Lesson selectedLesson = new Lesson("L101", "Variables and Data Types", "nufnn");
+   // Lesson selectedLesson = new Lesson("L101", "Variables and Data Types", "nufnn");
 
     java.awt.EventQueue.invokeLater(() -> {
-        new LessonViewerFrame(student, course, selectedLesson).setVisible(true);
+        new LessonViewerFrame(student, course, selectedLesson,dbManager).setVisible(true);
     });
 }
 
